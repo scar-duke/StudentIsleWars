@@ -45,20 +45,26 @@ def load_territories(num_players: int, max_armies: int, filename: str) -> dict[s
 
     num_territories = len(territories) // num_players
     assigns = []
+
+    # create num of armies for each player to have on each territories
+    armies = []
+    for i in range(num_territories):
+        armies.append(random.randint(1, max_armies))
     
     for p in range(0, num_players):
         for i in range(num_territories):
-            assigns.append(p)
+            assigns.append([p, armies[i]])
     if len(assigns) != len(territories):
         while(len(assigns) != len(territories)):
-            assigns.append(random.randint(0, num_players-1))
+            assigns.append([random.randint(0, num_players-1), 1])
     random.shuffle(assigns)
 
     # after loading in from json file, assign territories to players and numbers of armies
-    for i in range(len(territories)):
-        num_armies = random.randint(1, max_armies)
-        territories[str(i)].owner_id = assigns[i]
-        territories[str(i)].armies = num_armies
+    it = 0
+    for i in territories.keys():
+        territories[str(i)].owner_id = assigns[it][0]
+        territories[str(i)].armies = assigns[it][1]
+        it += 1
 
     return territories
 
