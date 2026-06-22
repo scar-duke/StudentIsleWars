@@ -1,5 +1,6 @@
 import json
 import pygame
+from ui.mask_colors import mask_colors
 
 
 OWNER_COLORS = {
@@ -7,7 +8,7 @@ OWNER_COLORS = {
     0: (80, 140, 255, 110),    # blue
     1: (255, 90, 90, 110),     # red
     2: (90, 220, 120, 110),    # green
-    3: (240, 220, 80, 110),    # yellow
+    3: (255, 255, 80, 110),    # yellow
     4: (190, 120, 255, 110),   # purple
     5: (255, 170, 70, 110),    # orange
 }
@@ -38,23 +39,17 @@ def hex_to_rgb(hex_string):
 
 
 def build_territory_templates(mask_surface, territories):
-    """
-    Build one template surface per territory from the mask image.
-
-    Each template is a white-on-transparent surface in the shape of the
-    territory. Later we tint that shape according to owner_id.
-    """
     templates = {}
 
     for territory in territories:
         name = territory["name"]
-        rgb = hex_to_rgb(territory["visual"]["mask_color"])
+        rgb = hex_to_rgb(mask_colors[int(name)][0])
         rgba = (rgb[0], rgb[1], rgb[2], 255)
 
         territory_mask = pygame.mask.from_threshold(
             mask_surface,
             rgba,
-            threshold=(0, 0, 0, 0)
+            threshold=(1, 1, 1)
         )
 
         template = territory_mask.to_surface(
@@ -74,9 +69,9 @@ def tint_template(template, color_rgba):
 
 
 def draw_owner_overlays(screen, templates, territories):
-    for territory in territories:
-        name = territory["name"]
-        owner_id = territory["owner_id"]
+    for territory in territories.values():
+        name = territory.name
+        owner_id = territory.owner_id
         color = OWNER_COLORS.get(owner_id, OWNER_COLORS[-1])
 
         template = templates[name]
@@ -84,11 +79,13 @@ def draw_owner_overlays(screen, templates, territories):
         screen.blit(overlay, (0, 0))
 
 
-def draw_army_counts(screen, territories, font):
-    for territory in territories:
-        x, y = territory["visual"]["army_pos"]
-        owner_id = territory["owner_id"]
-        armies = territory["armies"]
+def draw_army_counts(screen, territories, font, scale):
+    for territory in territories.values():
+        x, y = mask_colors[int(territory.name)][1]
+        x *= scale
+        y *= scale
+        owner_id = territory.owner_id
+        armies = territory.armies
 
         badge_color = BADGE_COLORS.get(owner_id, BADGE_COLORS[-1])
 
@@ -100,7 +97,7 @@ def draw_army_counts(screen, territories, font):
         screen.blit(text, rect)
 
 
-def draw_board_state(screen, board_surface, templates, map_data, font):
+def draw_board_state(screen, board_surface, templates, territories, font, scale):
     screen.blit(board_surface, (0, 0))
-    draw_owner_overlays(screen, templates, map_data["territories"])
-    draw_army_counts(screen, map_data["territories"], font)
+    draw_owner_overlays(screen, templates, territories)
+    draw_army_counts(screen, territories, font, scale)

@@ -57,8 +57,8 @@ def load_territories(num_players: int, max_armies: int, filename: str) -> dict[s
     # after loading in from json file, assign territories to players and numbers of armies
     for i in range(len(territories)):
         num_armies = random.randint(1, max_armies)
-        territories[str(i+1)].owner_id = assigns[i]
-        territories[str(i+1)].armies = num_armies
+        territories[str(i)].owner_id = assigns[i]
+        territories[str(i)].armies = num_armies
 
     return territories
 

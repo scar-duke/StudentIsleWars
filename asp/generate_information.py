@@ -28,10 +28,11 @@ def call_dlv_handler(agent_file: str, info: list, filter: str):
 
         answer_sets = handler.start_sync()
 
-        for answer_set in answer_sets.get_answer_sets():
-            answer = str(answer_set).replace("[","").replace("]","").replace("'","").split(", ")
-            #print(answer)
-            return answer
+        # get last generated answer set (one of the optimals)
+        answer_set = answer_sets.get_answer_sets()[-1]
+        answer = str(answer_set).replace("[","").replace("]","").replace("'","").split(", ")
+        #print(answer)
+        return answer
 
     except Exception as e:
         print(str(e))
