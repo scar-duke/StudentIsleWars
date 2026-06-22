@@ -1,3 +1,4 @@
+import time
 import pygame
 from game.engine import GameEngine
 from game.setup import create_initial_state_from_file
@@ -91,10 +92,11 @@ def runGame():
     print_board(engine.state)
     print_game_over(engine.state)
     draw_board_state(screen, board_surface, templates, state.territories, font, scale)
+    pygame.display.flip()
 
-    while(True):
-        if event.type == pygame.QUIT:
-            pygame.quit()
+    # show final board state for a few seconds before terminating program
+    time.sleep(3)
+    pygame.quit()
 
 
 def main():
