@@ -7,7 +7,7 @@ def add_dlv_program(handler, program_file_name):
     input = ASPInputProgram()
     program = ""
 
-    with open(program_file_name) as file:
+    with open(program_file_name, encoding="utf-8") as file:
         for line in file:
             if (not(("%" in line) or ("#show" in line))):
                 program += line
@@ -22,7 +22,7 @@ def create_map_from_dlv(file_name, cleaned):
     json_file = "./data/" + json_file
 
     # write file with proper json formatting
-    with open(json_file, "w") as file:
+    with open(json_file, "w", encoding="utf-8") as file:
         file.write('{"territories":[\n')
         sz = len(cleaned[0])
         neighbors = cleaned[1]
@@ -56,7 +56,6 @@ def parse_map_dlv(file_name):
 
             # clean answer set for map creation
             for item in answer:
-                #print(item)
                 if "territory" in item:
                     territories.append(item[10:].split(")")[0])
                 if "neighbor" in item or "connected" in item:
@@ -67,10 +66,9 @@ def parse_map_dlv(file_name):
                 if "assigned" in item:
                     d = item.split("(")[1].split(")")[0].split(",")
                     assigned[d[0]] = d[1]
-            
             create_map_from_dlv(file_name, [territories, neighbors, assigned])
 
     except Exception as e:
         print(str(e))
 
-parse_map_dlv("./asp/programs/default_map.dlv")
+parse_map_dlv("./asp/programs/full_map.dlv")

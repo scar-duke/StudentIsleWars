@@ -51,7 +51,7 @@ def create_world_information(territories: list[Territory]):
             neighs.append("neighbor("+str(territory.name)+","+str(neig)+").")
         info += neighs
     info.sort()
-    with open("./asp/programs/world.dlv", "w") as file:
+    with open("./asp/programs/world.dlv", "w", encoding="utf-8") as file:
         for i in info:
             file.write(i + "\n")
     return info
@@ -64,7 +64,7 @@ def update_world_information(id: int, phase: str, territories: list[Territory], 
         info.append("armies_present("+str(territory.name)+","+str(territory.armies)+").")
         info.append("owner("+str(territory.name)+","+str(territory.owner_id)+").")
     info.sort()
-    with open("./asp/programs/agent_"+str(id)+"_info.dlv", "w") as file:
+    with open("./asp/programs/agent_"+str(id)+"_info.dlv", "w", encoding="utf-8") as file:
         for i in info:
             file.write(i + "\n")
     return info

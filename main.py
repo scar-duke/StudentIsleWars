@@ -16,16 +16,17 @@ from players.human_text import HumanTextPlayer
 from ui.text_view import print_action_result, print_board, print_game_over
 
 max_armies = 6
-add_delay = True
+add_delay = False
 
 your_dlv_file = "./asp/programs/YOUR_FILE_NAME_HERE.dlv"
 
 def createControllers():
     return {
         #0: HumanTextPlayer(0, "Human"),
-        0: BasicASPPlayer(0, "My Team", your_dlv_file),
+        #0: BasicASPPlayer(0, "My Team", your_dlv_file),
         
         ### Random Computer Players
+        0: RandomComputerPlayer(0, "Computer 0"),
         1: RandomComputerPlayer(1, "Computer 1"),
         2: RandomComputerPlayer(2, "Computer 2"),
         
